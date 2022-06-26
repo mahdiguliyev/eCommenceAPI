@@ -2,6 +2,7 @@
 using eCommenceAPI.Application.RequestParameters;
 using eCommenceAPI.Application.Services;
 using eCommenceAPI.Application.ViewModels.Products;
+using eCommenceAPI.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -14,15 +15,21 @@ namespace eCommenceAPI.API.Controllers
         private readonly IProductWriteRepository _productWriteRepository;
         private readonly IProductReadRepository _productReadRepository;
         private readonly IFileService _fileService;
+        private readonly IProductImageFileWriteRepository _productImageFileWriteRepository;
+        private readonly IProductImageFileReadRepository _productImageFileReadRepository;
 
         public ProductsController(
             IProductWriteRepository productWriteRepository,
             IProductReadRepository productReadRepository,
-            IWebHostEnvironment webHostEnvironment, IFileService fileService)
+            IWebHostEnvironment webHostEnvironment,
+            IFileService fileService, IProductImageFileWriteRepository productImageFileWriteRepository,
+            IProductImageFileReadRepository productImageFileReadRepository)
         {
             _productWriteRepository = productWriteRepository;
             _productReadRepository = productReadRepository;
             _fileService = fileService;
+            _productImageFileWriteRepository = productImageFileWriteRepository;
+            _productImageFileReadRepository = productImageFileReadRepository;
         }
 
         [HttpGet]
@@ -33,14 +40,15 @@ namespace eCommenceAPI.API.Controllers
                 .GetAll(false)
                 .Skip(pagination.Page * pagination.Size)
                 .Take(pagination.Size)
-                .Select(p => new {
-                p.Id,
-                p.Name,
-                p.Stock,
-                p.Price,
-                p.CreatedDate,
-                p.UpdatedDate
-            });
+                .Select(p => new
+                {
+                    p.Id,
+                    p.Name,
+                    p.Stock,
+                    p.Price,
+                    p.CreatedDate,
+                    p.UpdatedDate
+                });
             return Ok(new
             {
                 totalCount,
@@ -77,7 +85,15 @@ namespace eCommenceAPI.API.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> Upload()
         {
-            await _fileService.UploadAsync("resource/product-images", Request.Form.Files);
+            var datas = await _fileService.UploadAsync("resource/product-images", Request.Form.Files);
+
+            await _productImageFileWriteRepository.AddRangeAsync(datas.Select(d => new ProductImageFile()
+            {
+                FileName = d.fileName,
+                Path = d.path
+            }).ToList());
+            await _productImageFileWriteRepository.SaveAsync();
+
             return Ok();
         }
     }

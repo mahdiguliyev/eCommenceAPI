@@ -2,7 +2,7 @@
 
 namespace eCommenceAPI.Application.IRepositories
 {
-    public interface ICustomerWriteRepository : IWriteRepository<Customer>
+    public interface IProductImageFileReadRepository : IReadRepository<ProductImageFile>
     {
     }
 }

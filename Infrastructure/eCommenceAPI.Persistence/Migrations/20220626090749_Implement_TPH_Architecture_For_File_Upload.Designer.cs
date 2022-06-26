@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using eCommenceAPI.Persistence.Contexts;
@@ -11,9 +12,10 @@ using eCommenceAPI.Persistence.Contexts;
 namespace eCommenceAPI.Persistence.Migrations
 {
     [DbContext(typeof(eCommenceAPIDbContext))]
-    partial class eCommenceAPIDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220626090749_Implement_TPH_Architecture_For_File_Upload")]
+    partial class Implement_TPH_Architecture_For_File_Upload
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

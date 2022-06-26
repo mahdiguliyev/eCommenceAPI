@@ -28,7 +28,7 @@ namespace eCommenceAPI.Infrastructure.Services
                 string fileNewName = await FileRenameAsync(uploadedPath, file.Name);
 
                 bool result = await CopyFileAsync($"{uploadedPath}\\{fileNewName}", file);
-                datas.Add((fileNewName, $"{uploadedPath}\\{fileNewName}"));
+                datas.Add((fileNewName, $"{path}\\{fileNewName}"));
                 results.Add(result);
             }
 
@@ -38,6 +38,7 @@ namespace eCommenceAPI.Infrastructure.Services
             //todo if there is any false result we should throw an Exception
             return null;
         }
+
         public async Task<bool> CopyFileAsync(string path, IFormFile file)
         {
             try
