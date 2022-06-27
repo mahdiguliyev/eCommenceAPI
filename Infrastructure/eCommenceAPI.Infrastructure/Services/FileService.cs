@@ -1,62 +1,11 @@
-﻿using eCommenceAPI.Application.Services;
-using eCommenceAPI.Infrastructure.Operations;
+﻿using eCommenceAPI.Infrastructure.Operations;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 
 namespace eCommenceAPI.Infrastructure.Services
 {
-    public class FileService : IFileService
+    public class FileService 
     {
-        private readonly IWebHostEnvironment _webHostEnvironment;
-
-        public FileService(IWebHostEnvironment webHostEnvironment)
-        {
-            _webHostEnvironment = webHostEnvironment;
-        }
-
-        public async Task<List<(string fileName, string path)>> UploadAsync(string path, IFormFileCollection files)
-        {
-            var uploadedPath = Path.Combine(_webHostEnvironment.WebRootPath, path);
-
-            if (!Directory.Exists(uploadedPath))
-                Directory.CreateDirectory(uploadedPath);
-
-            List<bool> results = new();
-            List<(string fileName, string path)> datas = new();
-            foreach (IFormFile file in files)
-            {
-                string fileNewName = await FileRenameAsync(uploadedPath, file.Name);
-
-                bool result = await CopyFileAsync($"{uploadedPath}\\{fileNewName}", file);
-                datas.Add((fileNewName, $"{path}\\{fileNewName}"));
-                results.Add(result);
-            }
-
-            if (results.TrueForAll(r => r.Equals(true)))
-                return datas;
-
-            //todo if there is any false result we should throw an Exception
-            return null;
-        }
-
-        public async Task<bool> CopyFileAsync(string path, IFormFile file)
-        {
-            try
-            {
-                await using FileStream fileStream = new(path, FileMode.Create, FileAccess.Write, FileShare.None, 1024 * 1024, useAsync: false);
-                await file.CopyToAsync(fileStream);
-                await fileStream.FlushAsync();
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                //todo log the Exception
-                throw ex;
-            }
-            
-        }
-
         async Task<string> FileRenameAsync(string path, string fileName, bool first = true)
         {
             string newFileName = await Task.Run(async () =>
