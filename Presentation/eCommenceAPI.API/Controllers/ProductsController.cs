@@ -87,7 +87,7 @@ namespace eCommenceAPI.API.Controllers
         {
             //var datas = await _fileService.UploadAsync("resource/product-images", Request.Form.Files);
 
-            var datas = await _storageService.UploadAsync("resource/product-images", Request.Form.Files);
+            var datas = await _storageService.UploadAsync("product-images", Request.Form.Files);
 
             await _productImageFileWriteRepository.AddRangeAsync(datas.Select(d => new ProductImageFile()
             {

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace eCommenceAPI.Infrastructure.Services.Storage.Local
 {
-    public class LocalStorage : ILocalStorage
+    public class LocalStorage : Storage, ILocalStorage
     {
         private readonly IWebHostEnvironment _webHostEnvironment;
 
@@ -35,10 +35,10 @@ namespace eCommenceAPI.Infrastructure.Services.Storage.Local
             List<(string fileName, string path)> datas = new();
             foreach (IFormFile file in files)
             {
-                //string fileNewName = await FileRenameAsync(uploadedPath, file.Name);
+                string fileNewName = await FileRenameAsync(path, file.Name, HasFile);
 
-                await CopyFileAsync($"{uploadedPath}\\{file.Name}", file);
-                datas.Add((file.Name, $"{path}\\{file.Name}"));
+                await CopyFileAsync($"{uploadedPath}\\{fileNewName}", file);
+                datas.Add((fileNewName, $"{path}\\{fileNewName}"));
             }
 
             //todo if there is any false result we should throw an Exception
