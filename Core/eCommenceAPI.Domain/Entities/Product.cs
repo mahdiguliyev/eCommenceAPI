@@ -1,9 +1,4 @@
 ﻿using eCommenceAPI.Domain.Entities.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace eCommenceAPI.Domain.Entities
 {
@@ -14,5 +9,6 @@ namespace eCommenceAPI.Domain.Entities
         public float Price { get; set; }
 
         public ICollection<Order> Orders { get; set; }
+        public ICollection<ProductImageFile> ProductImageFiles { get; set; }
     }
 }

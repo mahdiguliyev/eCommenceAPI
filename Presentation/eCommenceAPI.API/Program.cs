@@ -2,6 +2,7 @@ using eCommenceAPI.Application.Validators.Products;
 using eCommenceAPI.Infrastructure;
 using eCommenceAPI.Infrastructure.Filters;
 using eCommenceAPI.Infrastructure.Services.Storage.Azure;
+using eCommenceAPI.Infrastructure.Services.Storage.Local;
 using eCommenceAPI.Persistence;
 using FluentValidation.AspNetCore;
 
